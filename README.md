@@ -466,6 +466,10 @@ linkerd viz dashboard
 * Routing / Fireall
 * ServiceMesh
 * Network Policies
+### Service Type LoadBalancer
+Vorteile: beliebiges Protokoll
+Nachteile: pro Service wird eine externe IP vergeben
+![Image](images/service-type-loadbalancer.drawio.svg)
 
 
 ## Sicherheitsmaßnahmen für Image Builder / Entwickler
