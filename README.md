@@ -467,9 +467,20 @@ linkerd viz dashboard
 * ServiceMesh
 * Network Policies
 ### Service Type LoadBalancer
-Vorteile: beliebiges Protokoll
-Nachteile: pro Service wird eine externe IP vergeben
+* Vorteile: beliebiges Protokoll
+* Nachteile: pro Service wird eine externe IP vergeben
 ![Image](images/service-type-loadbalancer.drawio.svg)
+
+### Ingress / Gateway API
+* Vorteile: für alle Services wird reichte eine IP
+* Nachteile: eingeschränkte Protokolle (HTTP/HTTPS)
+![Image](images/ingress-gateway-api.drawio.svg)
+
+### Ingress / Gateway API
+* Vorteile: funktioniert rein mit Kubernetes-Mittel (ohne externe IPs / Provider Nachhilfe)
+* Nachteile: *"depricated"*, zusaätzliche Firewall/Routing Aufgaben
+![Image](images/service-type-nodeport.drawio.svg)
+
 
 
 ## Sicherheitsmaßnahmen für Image Builder / Entwickler
