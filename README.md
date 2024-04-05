@@ -478,7 +478,7 @@ linkerd viz dashboard
 
 ### Ingress / Gateway API
 * Vorteile: funktioniert rein mit Kubernetes-Mittel (ohne externe IPs / Provider Nachhilfe)
-* Nachteile: *"depricated"*, zusaätzliche Firewall/Routing Aufgaben
+* Nachteile: *"depricated"*, zusätzliche Firewall/Routing Aufgaben
 ![Image](images/service-type-nodeport.drawio.svg)
 
 
@@ -513,6 +513,10 @@ linkerd viz dashboard
     - Pod Security (restriction for capabilities, host resources)
     - Intrusion Detection (Falco)
     - Audit Logging
-    - Verion up-to-date
+    - Version up-to-date
     - Pod-to-Pod communitcation encryption (mTLS)
     - Enforce Policies
+
+
+## CI/CD
+![Image](images/ci-cd.drawio.svg)
