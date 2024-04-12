@@ -2,6 +2,14 @@
 
 ## Meetings
 
+### 12.04.2024
+* Baustaune von Compendium ab 4.4.A9
+* NetworkPolicies
+* DevSecOps
+* Open Policy Agent
+
+### 05.04.2024
+* Baustaune von Compendium ab 4.4 Kubernetes
 
 ### 22.03.2024
  * Kubernetes <-> VM Kommunikation
@@ -58,6 +66,9 @@ vna:
 * [Learn Kubernetes Basics](https://kubernetes.io/docs/tutorials/kubernetes-basics/)
 * [Kubernetes Tutorial for Beginners](https://www.getambassador.io/blog/kubernetes-tutorial-beginners-guide)
 * [The Illustrated Children’s Guide to Kubernetes ](https://www.cncf.io/phippy/the-childrens-illustrated-guide-to-kubernetes/)
+* [K8Studio - Kubernetes Client](https://k8studio.io/)
+* [CNCF Landscape](https://landscape.cncf.io/)
+
 
 ## Docker Image
 
@@ -508,10 +519,10 @@ linkerd viz dashboard
     - API
     - ETCD
     - RBAC
-    - Cluster Configuration (kubescape.io: comliance and misconfiguration)
+    - Cluster Configuration (kubescape.io: compliance and misconfiguration)
     - Default Network Policies
-    - Pod Security (restriction for capabilities, host resources)
-    - Intrusion Detection (Falco)
+    - Pod Security
+    - Threat Detection (Falco)
     - Audit Logging
     - Version up-to-date
     - Pod-to-Pod communitcation encryption (mTLS)
@@ -520,3 +531,151 @@ linkerd viz dashboard
 
 ## CI/CD
 ![Image](images/ci-cd.drawio.svg)
+
+
+## NetworkPolicies
+```bash
+# DENY all non-whitelisted traffic
+{
+cat <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  ingress: []
+  ingress:
+    - from:
+      - podSelector: {}
+    - {}
+EOF
+} | kubectl apply -f -
+{
+
+# allow only from pods within selector
+cat <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  ingress: []
+  ingress:
+    - from:
+      - podSelector: {}
+EOF
+} | kubectl apply -f -
+
+# allow all again
+cat <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  ingress:
+    - {}
+EOF
+} | kubectl apply -f -
+
+
+# allow from specific ip
+{
+cat <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  ingress: 
+    - from:
+        - ipBlock:
+            cidr: 10.0.0.0/8
+EOF
+} | kubectl apply -f -
+
+```
+
+
+## Auditing
+[Doc](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+
+## Taint, Tolerations, Node Selector
+[Doc](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+Use Cases:
+* Dadicated (project) Nodes
+* Special Hardware (GPU)
+
+
+## Operators
+[operatorhub.io](https://operatorhub.io/)
+
+
+## kubescape
+
+```bash
+kubescape scan --verbose
+
+# list frameworks
+kubescape list frameworks
+
+# framework nsa
+kubescape scan framework nsa
+
+# framework mitre
+kubescape scan framework mitre
+
+# scan with certain control
+kubescape list controls
+kubescape scan control C-0057 # Privileged container
+
+# scan git repo
+kubescape scan https://github.com/kubescape/kubescape
+
+# kustomize directory
+kubescape scan [PATH]
+
+```
+
+## Pod Security
+* [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/  )
+* [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+
+## Falco
+* [Rules](https://falco.org/docs/rules/basic-elements/)
+* [Accessing File System Paths](https://falco.org/docs/rules/fspath/)
+
+
+## Admission Controllers
+* [Kyverno](https://www.cncf.io/blog/2024/03/29/generating-kubernetes-validatingadmissionpolicies-from-kyverno-policies/)
+* [Open Policy Agent - Tutorial: Ingress Validation](https://www.openpolicyagent.org/docs/latest/kubernetes-tutorial/)
+* [Open Policy Agent - Kubernetes Admission Control](https://www.openpolicyagent.org/docs/v0.11.0/guides-kubernetes-admission-control/)
+* [Securing Kubernetes with Open Policy Agent (OPA)](https://medium.com/@onixoni72/securing-kubernetes-with-open-policy-agent-opa-67167157d477)
+
+
+## DevSecOps
+* [Was ist DevSecOps?](https://jfrog.com/de/devops-tools/what-is-devsecops/)
+* [DevSecOps Tools](https://ranjaniitian.medium.com/top-devsecops-tools-for-2023-open-source-solutions-for-enterprises-7c146f80b325)
+
+
+## Compendium
+### APP.4.4.A9
+```bash
+kubectl get pods -o jsonpath='{range .items[*]}{.metadata.namespace} {.metadata.name} {.spec.serviceAccount}{"\n"}' -A  | column -t
+```
+
+### APP.4.4.A15
+```bash
+# TODO: Befehle zum Nachsehen ob taints an Knoten konfiguriert sind
+                              ob Pods bestimmte taints tolerieren
+```
+
+### APP.4.4.A20
+```bash
+# TODO: ist etcd verschlüsselt?
+```
